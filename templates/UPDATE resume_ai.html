@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>AI Resume Analyzer</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>🤖 AI Resume Analyzer</h2>
+
+    <div>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <div class="dashboard-card">
+
+        <h1>Upload Resume PDF</h1>
+
+        <form
+        method="POST"
+        enctype="multipart/form-data">
+
+            <input
+            type="file"
+            name="resume"
+            accept=".pdf"
+            required>
+
+            <br><br>
+
+            <button type="submit">
+
+                Analyze Resume
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if result %}
+
+    <br>
+
+    <div class="dashboard-card">
+
+        <h2>AI Analysis</h2>
+
+        <br>
+
+        <p style="white-space:pre-line; line-height:1.8;">
+
+            {{ result }}
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
