@@ -2,92 +2,154 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
+}
+
+html{
+    min-height:100%;
 }
 
 body{
-    height:100vh;
-    background:linear-gradient(135deg,#050816,#0f172a,#1e3a8a);
+
+    min-height:100vh;
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617 0%,
+        #0f172a 45%,
+        #172554 100%
+    );
+
+    background-attachment:fixed;
+
     color:white;
+
 }
 
+/* =========================
+MAIN LOGIN PAGE
+========================= */
+
 .main-container{
+
     display:flex;
-    height:100vh;
+    min-height:100vh;
+
 }
 
 .left{
+
     width:50%;
     display:flex;
     flex-direction:column;
     justify-content:center;
     padding:80px;
+
 }
 
 .left h1{
+
     font-size:65px;
     line-height:1.2;
     margin-bottom:20px;
+
 }
 
 .left span{
+
     color:#60a5fa;
+
 }
 
 .left p{
+
     color:#cbd5e1;
     font-size:20px;
     margin-bottom:40px;
+
 }
 
 .features{
+
     display:flex;
     gap:20px;
     flex-wrap:wrap;
+
 }
 
 .card{
+
     background:rgba(255,255,255,0.08);
     padding:20px;
     border-radius:20px;
     width:180px;
     backdrop-filter:blur(10px);
     border:1px solid rgba(255,255,255,0.1);
+    transition:0.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
 }
 
 .card h3{
+
     margin-bottom:10px;
+
 }
 
 .right{
+
     width:50%;
     display:flex;
     justify-content:center;
     align-items:center;
+
 }
 
+/* =========================
+LOGIN BOX
+========================= */
+
 .login-box{
+
     width:420px;
     background:rgba(255,255,255,0.08);
     padding:40px;
     border-radius:25px;
     backdrop-filter:blur(15px);
     border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+
 }
 
 .login-box h2{
+
     text-align:center;
     margin-bottom:10px;
     font-size:40px;
+
 }
 
 .login-box p{
+
     text-align:center;
     color:#cbd5e1;
     margin-bottom:30px;
+
 }
 
-input{
+/* =========================
+INPUTS
+========================= */
+
+input,
+textarea{
+
     width:100%;
     padding:15px;
     margin-bottom:20px;
@@ -96,73 +158,197 @@ input{
     background:rgba(255,255,255,0.1);
     color:white;
     outline:none;
+    font-size:16px;
+
 }
 
+input::placeholder,
+textarea::placeholder{
+
+    color:#cbd5e1;
+
+}
+
+/* =========================
+BUTTONS
+========================= */
+
 button{
+
     width:100%;
     padding:15px;
     border:none;
     border-radius:12px;
-    background:linear-gradient(to right,#9333ea,#2563eb);
+
+    background:
+    linear-gradient(
+        to right,
+        #9333ea,
+        #2563eb
+    );
+
     color:white;
     font-size:18px;
     cursor:pointer;
+    transition:0.3s;
+
 }
 
 button:hover{
-    opacity:0.9;
+
+    transform:scale(1.02);
+    opacity:0.95;
+
 }
 
+/* =========================
+LINKS
+========================= */
+
 .link{
+
     text-align:center;
     margin-top:20px;
+
 }
 
 .link a{
+
     color:#60a5fa;
     text-decoration:none;
+
 }
 
-.dashboard{
-    padding:50px;
-}
+/* =========================
+NAVBAR
+========================= */
 
 .navbar{
+
     background:rgba(255,255,255,0.08);
     padding:20px 50px;
+
     display:flex;
     justify-content:space-between;
+    align-items:center;
+
+    backdrop-filter:blur(10px);
+
+}
+
+.navbar h2{
+
+    font-size:28px;
+
 }
 
 .navbar a{
+
     color:white;
     text-decoration:none;
     margin-left:20px;
+    transition:0.3s;
+
+}
+
+.navbar a:hover{
+
+    color:#60a5fa;
+
+}
+
+/* =========================
+DASHBOARD
+========================= */
+
+.dashboard{
+
+    padding:50px;
+    min-height:100vh;
+
+}
+
+.dashboard h1{
+
+    margin-bottom:20px;
+
 }
 
 .dashboard-cards{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
     gap:25px;
+
     margin-top:40px;
+
 }
 
+/* =========================
+DASHBOARD CARD
+========================= */
+
 .dashboard-card{
+
     background:rgba(255,255,255,0.08);
-    padding:30px;
-    border-radius:20px;
+
+    padding:35px;
+
+    border-radius:25px;
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    transition:0.3s;
+
+    box-shadow:0 8px 32px rgba(0,0,0,0.2);
+
 }
-/* PROFILE PAGE */
+
+.dashboard-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.dashboard-card h2{
+
+    margin-bottom:10px;
+    font-size:24px;
+
+}
+
+.dashboard-card p{
+
+    color:#e2e8f0;
+    line-height:1.6;
+
+}
+
+/* =========================
+PROFILE PAGE
+========================= */
 
 .profile-card{
 
     width:400px;
+
     margin:auto;
+
     text-align:center;
+
     padding:40px;
+
     border-radius:25px;
+
     background:rgba(255,255,255,0.08);
+
     backdrop-filter:blur(10px);
+
     box-shadow:0 8px 32px rgba(0,0,0,0.3);
 
 }
@@ -171,12 +357,22 @@ button:hover{
 
     width:120px;
     height:120px;
+
     margin:auto;
+
     border-radius:50%;
-    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    background:
+    linear-gradient(
+        135deg,
+        #00c6ff,
+        #0072ff
+    );
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:50px;
 
 }
@@ -184,7 +380,6 @@ button:hover{
 .profile-card h1{
 
     margin-top:20px;
-    color:white;
 
 }
 
@@ -205,20 +400,31 @@ button:hover{
 .stat-box{
 
     padding:15px;
+
     border-radius:15px;
+
     background:rgba(255,255,255,0.08);
+
     width:90px;
 
 }
-/* PROGRESS ANALYTICS */
+
+/* =========================
+PROGRESS ANALYTICS
+========================= */
 
 .progress-bar{
 
     width:100%;
+
     height:30px;
+
     background:rgba(255,255,255,0.1);
+
     border-radius:20px;
+
     overflow:hidden;
+
     margin-top:20px;
 
 }
@@ -226,10 +432,74 @@ button:hover{
 .progress-fill{
 
     height:100%;
-    background:linear-gradient(90deg,#9333ea,#2563eb);
+
+    background:
+    linear-gradient(
+        90deg,
+        #9333ea,
+        #2563eb
+    );
+
     text-align:center;
+
     line-height:30px;
+
     color:white;
+
     font-weight:bold;
+
+}
+
+/* =========================
+MOBILE RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .main-container{
+
+        flex-direction:column;
+
+    }
+
+    .left,
+    .right{
+
+        width:100%;
+
+    }
+
+    .left{
+
+        padding:40px;
+
+    }
+
+    .left h1{
+
+        font-size:45px;
+
+    }
+
+    .dashboard{
+
+        padding:20px;
+
+    }
+
+    .navbar{
+
+        padding:20px;
+
+        flex-direction:column;
+        gap:15px;
+
+    }
+
+    .login-box{
+
+        width:90%;
+
+    }
 
 }
