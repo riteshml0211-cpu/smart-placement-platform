@@ -98,6 +98,34 @@ def logout():
     session.clear()
 
     return redirect("/login")
+# APTITUDE PAGE
+@app.route("/aptitude")
+def aptitude():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template("aptitude.html")
+
+
+# CODING PAGE
+@app.route("/coding")
+def coding():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template("coding.html")
+
+
+# RESUME ANALYZER PAGE
+@app.route("/resume")
+def resume():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template("resume.html")
 
 # RUN APP
 if __name__ == "__main__":
