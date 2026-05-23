@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Login</title>
+
     <link rel="stylesheet"
     href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
@@ -19,25 +22,26 @@
         </h1>
 
         <p>
-            Crack placements smarter with AI Resume Analysis,
-            Aptitude Practice and Coding Preparation.
+            Crack placements smarter using AI-powered
+            aptitude practice, coding preparation
+            and resume analysis.
         </p>
 
         <div class="features">
 
             <div class="card">
-                <h3>🧠 Aptitude</h3>
-                <p>Practice placement questions.</p>
+                <h3>🧠 AI Aptitude</h3>
+                <p>AI generates aptitude MCQs.</p>
             </div>
 
             <div class="card">
-                <h3>💻 Coding</h3>
-                <p>Improve coding skills.</p>
+                <h3>💻 AI Coding</h3>
+                <p>Practice coding interview questions.</p>
             </div>
 
             <div class="card">
-                <h3>🤖 AI Resume</h3>
-                <p>Analyze your resume.</p>
+                <h3>🤖 Resume AI</h3>
+                <p>Analyze resume using AI.</p>
             </div>
 
         </div>
@@ -50,14 +54,14 @@
 
             <h2>Welcome Back 👋</h2>
 
-            <p>Login to continue your preparation</p>
+            <p>Login to continue</p>
 
             <form method="POST">
 
                 <input
-                type="email"
-                name="email"
-                placeholder="Enter Email"
+                type="text"
+                name="name"
+                placeholder="Enter Username"
                 required>
 
                 <input
@@ -67,7 +71,9 @@
                 required>
 
                 <button type="submit">
+
                     Login
+
                 </button>
 
             </form>
@@ -77,7 +83,9 @@
                 Don't have account?
 
                 <a href="/register">
+
                     Register
+
                 </a>
 
             </div>
