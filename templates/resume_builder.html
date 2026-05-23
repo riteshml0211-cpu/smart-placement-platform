@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>AI Resume Builder</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>📄 AI Resume Builder</h2>
+
+    <div>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <div class="dashboard-card">
+
+        <h1>Create Resume</h1>
+
+        <form method="POST">
+
+            <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            required>
+
+            <textarea
+            name="skills"
+            rows="4"
+            placeholder="Enter Skills"
+            style="
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            margin-top:15px;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            "
+            ></textarea>
+
+            <textarea
+            name="education"
+            rows="4"
+            placeholder="Enter Education"
+            style="
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            margin-top:15px;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            "
+            ></textarea>
+
+            <textarea
+            name="projects"
+            rows="4"
+            placeholder="Enter Projects"
+            style="
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            margin-top:15px;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            "
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+
+                Build Resume
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if result %}
+
+    <br>
+
+    <div class="dashboard-card">
+
+        <h2>Generated Resume</h2>
+
+        <br>
+
+        <p style="white-space:pre-line; line-height:1.8;">
+
+            {{ result }}
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
