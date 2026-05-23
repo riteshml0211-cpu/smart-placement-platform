@@ -26,31 +26,25 @@
 
     <div class="dashboard-card">
 
-        <h1>Ask Aptitude Question</h1>
+        <h1>AI Generated Question</h1>
 
-        <form method="POST" action="/aptitude-ai">
+        <br>
 
-            <textarea
-            name="question"
-            rows="8"
-            style="
-            width:100%;
-            padding:15px;
-            border-radius:15px;
-            border:none;
-            background:rgba(255,255,255,0.1);
-            color:white;
-            "
-            placeholder="Enter aptitude question here..."
-            ></textarea>
+        <p style="line-height:1.8; white-space:pre-line;">
 
-            <br><br>
+            {{ result }}
 
-            <button type="submit">
-                Solve Using AI
+        </p>
+
+        <br>
+
+        <a href="/aptitude">
+
+            <button>
+                Generate New Question
             </button>
 
-        </form>
+        </a>
 
     </div>
 
