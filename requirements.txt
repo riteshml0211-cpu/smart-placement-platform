@@ -5,3 +5,4 @@ openai
 PyPDF2
 gunicorn
 psycopg2-binary
+PyPDF2
