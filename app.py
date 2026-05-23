@@ -25,16 +25,17 @@ except Exception as e:
     print("❌ Database Error:", e)
 
 # =========================================
-# GROK AI CLIENT
+# AI CLIENT (GROQ)
 # =========================================
 
 try:
 
     client = OpenAI(
-         base_url="https://api.groq.com/openai/v1"
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url="https://api.groq.com/openai/v1"
     )
 
-    print("✅ Grok AI Connected")
+    print("✅ Groq AI Connected")
 
 except Exception as e:
 
@@ -87,7 +88,6 @@ def register():
             name = request.form["name"]
             password = request.form["password"]
 
-            # CHECK EXISTING USER
             cursor.execute(
                 "SELECT * FROM users WHERE name=%s",
                 (name,)
@@ -99,7 +99,6 @@ def register():
 
                 return "⚠️ Username already exists"
 
-            # INSERT USER
             cursor.execute(
                 "INSERT INTO users(name,password) VALUES(%s,%s)",
                 (name, password)
@@ -173,20 +172,7 @@ def dashboard():
     )
 
 # =========================================
-# QUIZ PAGE
-# =========================================
-
-@app.route("/quiz")
-def quiz():
-
-    if "user" not in session:
-
-        return redirect("/login")
-
-    return render_template("quiz.html")
-
-# =========================================
-# AI APTITUDE PAGE
+# AI APTITUDE
 # =========================================
 
 @app.route("/aptitude")
@@ -201,7 +187,7 @@ def aptitude():
     try:
 
         response = client.chat.completions.create(
-            model="grok-3-mini-beta",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "user",
@@ -232,7 +218,7 @@ def aptitude():
     )
 
 # =========================================
-# AI CODING PAGE
+# AI CODING
 # =========================================
 
 @app.route("/coding")
@@ -325,6 +311,120 @@ def check_code():
     return render_template(
         "coding_result.html",
         feedback=feedback
+    )
+
+# =========================================
+# MOCK INTERVIEW
+# =========================================
+
+@app.route("/mock-interview", methods=["GET", "POST"])
+def mock_interview():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        role = request.form["role"]
+
+        try:
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+                        Conduct a mock interview for:
+
+                        {role}
+
+                        Ask:
+                        1. HR Questions
+                        2. Technical Questions
+                        3. Behavioral Questions
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
+
+    return render_template(
+        "mock_interview.html",
+        result=result
+    )
+
+# =========================================
+# SKILL TRACKER
+# =========================================
+
+@app.route("/skills")
+def skills():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    return render_template("skills.html")
+
+# =========================================
+# AI ASSISTANT
+# =========================================
+
+@app.route("/assistant", methods=["GET", "POST"])
+def assistant():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        question = request.form["question"]
+
+        try:
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+                        You are an AI placement mentor.
+
+                        Help student with:
+                        - placements
+                        - coding
+                        - aptitude
+                        - interviews
+                        - resume
+
+                        Question:
+                        {question}
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
+
+    return render_template(
+        "assistant.html",
+        result=result
     )
 
 # =========================================
