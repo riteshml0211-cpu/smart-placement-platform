@@ -1,105 +1,122 @@
 from flask import Flask, render_template, request, redirect, session
-import sqlite3
 from openai import OpenAI
-
+import psycopg2
 import os
+
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-# =========================
-# DATABASE CONNECTION
-# =========================
+# =========================================
+# NEON DATABASE CONNECTION
+# =========================================
 
-conn = sqlite3.connect("database.db", check_same_thread=False)
+conn = psycopg2.connect(
+    os.getenv("DATABASE_URL")
+)
+
 cursor = conn.cursor()
 
-# =========================
+# =========================================
 # GROK AI CLIENT
-# =========================
-
+# =========================================
 
 client = OpenAI(
-    api_key=os.getenv("GROK_API_KEY"),
     base_url="https://api.x.ai/v1"
 )
 
-# =========================
+# =========================================
 # CREATE USERS TABLE
-# =========================
+# =========================================
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    email TEXT,
-    password TEXT
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    password VARCHAR(100)
 )
 """)
 
 conn.commit()
 
-# =========================
+# =========================================
 # HOME PAGE
-# =========================
+# =========================================
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-# =========================
+# =========================================
 # REGISTER PAGE
-# =========================
+# =========================================
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "POST":
 
-        name = request.form["name"]
-        email = request.form["email"]
-        password = request.form["password"]
+        try:
 
-        cursor.execute(
-            "INSERT INTO users(name,email,password) VALUES(?,?,?)",
-            (name, email, password)
-        )
+            name = request.form["name"]
+            email = request.form["email"]
+            password = request.form["password"]
 
-        conn.commit()
+            cursor.execute(
+                "INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",
+                (name, email, password)
+            )
 
-        return redirect("/login")
+            conn.commit()
+
+            return redirect("/login")
+
+        except Exception as e:
+
+            return f"Register Error: {str(e)}"
 
     return render_template("register.html")
 
-# =========================
+# =========================================
 # LOGIN PAGE
-# =========================
+# =========================================
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        email = request.form["email"]
-        password = request.form["password"]
+        try:
 
-        cursor.execute(
-            "SELECT * FROM users WHERE email=? AND password=?",
-            (email, password)
-        )
+            email = request.form["email"]
+            password = request.form["password"]
 
-        user = cursor.fetchone()
+            cursor.execute(
+                "SELECT * FROM users WHERE email=%s AND password=%s",
+                (email, password)
+            )
 
-        if user:
+            user = cursor.fetchone()
 
-            session["user"] = user[1]
+            if user:
 
-            return redirect("/dashboard")
+                session["user"] = user[1]
+
+                return redirect("/dashboard")
+
+            else:
+
+                return "Invalid Email or Password"
+
+        except Exception as e:
+
+            return f"Login Error: {str(e)}"
 
     return render_template("login.html")
 
-# =========================
+# =========================================
 # DASHBOARD
-# =========================
+# =========================================
 
 @app.route("/dashboard")
 def dashboard():
@@ -112,9 +129,9 @@ def dashboard():
         user=session["user"]
     )
 
-# =========================
+# =========================================
 # QUIZ PAGE
-# =========================
+# =========================================
 
 @app.route("/quiz")
 def quiz():
@@ -124,9 +141,9 @@ def quiz():
 
     return render_template("quiz.html")
 
-# =========================
-# APTITUDE PAGE
-# =========================
+# =========================================
+# AI APTITUDE PAGE
+# =========================================
 
 @app.route("/aptitude")
 def aptitude():
@@ -134,104 +151,23 @@ def aptitude():
     if "user" not in session:
         return redirect("/login")
 
-    response = client.chat.completions.create(
-        model="grok-beta",
-        messages=[
-            {
-                "role": "user",
-                "content": """
-                Generate one aptitude MCQ question.
-
-                Format:
-                Question:
-                Options:
-                A)
-                B)
-                C)
-                D)
-
-                Correct Answer:
-                Explanation:
-
-                Difficulty: Medium
-
-                Keep it short.
-                """
-            }
-        ]
-    )
-
-    result = response.choices[0].message.content
-
-    return render_template(
-        "aptitude.html",
-        result=result
-    )
-# =========================
-# CODING PAGE
-# =========================
-
-@app.route("/coding")
-def coding():
-
-    if "user" not in session:
-        return redirect("/login")
-
-    response = client.chat.completions.create(
-        model="grok-beta",
-        messages=[
-            {
-                "role": "user",
-                "content": """
-                Generate one coding interview question.
-
-                Include:
-                1. Problem Statement
-                2. Example Input
-                3. Example Output
-                4. Difficulty Level
-
-                Keep it beginner friendly.
-                """
-            }
-        ]
-    )
-
-    result = response.choices[0].message.content
-
-    return render_template(
-        "coding.html",
-        result=result
-    )
-
-# =========================
-# CODING AI
-# =========================
-
-@app.route("/coding-ai", methods=["GET", "POST"])
-def coding_ai():
-
-    if "user" not in session:
-        return redirect("/login")
-
-    result = ""
-
-    if request.method == "POST":
-
-        question = request.form["question"]
+    try:
 
         response = client.chat.completions.create(
-            model="grok-beta",
+            model="grok-2-1212",
             messages=[
                 {
                     "role": "user",
-                    "content": f"""
-                    Solve this coding question in Python.
+                    "content": """
+                    Generate one aptitude MCQ question.
 
-                    Give explanation also.
+                    Include:
+                    1. Question
+                    2. Four options
+                    3. Correct answer
+                    4. Explanation
 
-                    Question:
-                    {question}
+                    Keep it beginner friendly.
                     """
                 }
             ]
@@ -239,10 +175,61 @@ def coding_ai():
 
         result = response.choices[0].message.content
 
+    except Exception as e:
+
+        result = f"AI Error: {str(e)}"
+
     return render_template(
-        "coding_ai.html",
+        "aptitude.html",
         result=result
     )
+
+# =========================================
+# AI CODING PAGE
+# =========================================
+
+@app.route("/coding")
+def coding():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    try:
+
+        response = client.chat.completions.create(
+            model="grok-2-1212",
+            messages=[
+                {
+                    "role": "user",
+                    "content": """
+                    Generate one Python coding interview question.
+
+                    Include:
+                    1. Problem Statement
+                    2. Example Input
+                    3. Example Output
+                    4. Difficulty Level
+
+                    Keep it beginner friendly.
+                    """
+                }
+            ]
+        )
+
+        result = response.choices[0].message.content
+
+    except Exception as e:
+
+        result = f"AI Error: {str(e)}"
+
+    return render_template(
+        "coding.html",
+        result=result
+    )
+
+# =========================================
+# AI CODE CHECKER
+# =========================================
 
 @app.route("/check-code", methods=["POST"])
 def check_code():
@@ -250,39 +237,46 @@ def check_code():
     if "user" not in session:
         return redirect("/login")
 
-    code = request.form["code"]
+    try:
 
-    response = client.chat.completions.create(
-        model="grok-beta",
-        messages=[
-            {
-                "role": "user",
-                "content": f"""
-                Check this Python code.
+        code = request.form["code"]
 
-                Give:
-                1. Is code correct?
-                2. Errors
-                3. Improvements
-                4. Optimized approach
-                5. Score out of 10
+        response = client.chat.completions.create(
+            model="grok-2-1212",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""
+                    Check this Python code.
 
-                Code:
-                {code}
-                """
-            }
-        ]
-    )
+                    Give:
+                    1. Is code correct?
+                    2. Errors
+                    3. Improvements
+                    4. Optimized approach
+                    5. Score out of 10
 
-    feedback = response.choices[0].message.content
+                    Code:
+                    {code}
+                    """
+                }
+            ]
+        )
+
+        feedback = response.choices[0].message.content
+
+    except Exception as e:
+
+        feedback = f"AI Error: {str(e)}"
 
     return render_template(
         "coding_result.html",
         feedback=feedback
     )
-# =========================
-# RESUME ANALYZER PAGE
-# =========================
+
+# =========================================
+# RESUME PAGE
+# =========================================
 
 @app.route("/resume")
 def resume():
@@ -292,9 +286,9 @@ def resume():
 
     return render_template("resume.html")
 
-# =========================
-# RESUME AI ANALYZER
-# =========================
+# =========================================
+# AI RESUME ANALYZER
+# =========================================
 
 @app.route("/resume-ai", methods=["GET", "POST"])
 def resume_ai():
@@ -306,39 +300,45 @@ def resume_ai():
 
     if request.method == "POST":
 
-        resume_text = request.form["resume_text"]
+        try:
 
-        response = client.chat.completions.create(
-            model="grok-beta",
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"""
-                    Analyze this resume.
+            resume_text = request.form["resume_text"]
 
-                    Give:
-                    1. ATS Score
-                    2. Missing Skills
-                    3. Improvement Suggestions
-                    4. Placement Readiness
+            response = client.chat.completions.create(
+                model="grok-2-1212",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+                        Analyze this resume.
 
-                    Resume:
-                    {resume_text}
-                    """
-                }
-            ]
-        )
+                        Give:
+                        1. ATS Score
+                        2. Missing Skills
+                        3. Suggestions
+                        4. Placement Readiness
 
-        result = response.choices[0].message.content
+                        Resume:
+                        {resume_text}
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
 
     return render_template(
         "resume_ai.html",
         result=result
     )
 
-# =========================
+# =========================================
 # LOGOUT
-# =========================
+# =========================================
 
 @app.route("/logout")
 def logout():
@@ -347,9 +347,9 @@ def logout():
 
     return redirect("/login")
 
-# =========================
+# =========================================
 # RUN APP
-# =========================
+# =========================================
 
 if __name__ == "__main__":
     app.run(debug=True)
