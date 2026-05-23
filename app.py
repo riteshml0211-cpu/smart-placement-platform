@@ -1,14 +1,30 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+from openai import OpenAI
 
 app = Flask(__name__)
 app.secret_key = "secret123"
 
+# =========================
 # DATABASE CONNECTION
+# =========================
+
 conn = sqlite3.connect("database.db", check_same_thread=False)
 cursor = conn.cursor()
 
+# =========================
+# GROK AI CLIENT
+# =========================
+
+client = OpenAI(
+    api_key="YOUR_GROK_API_KEY",
+    base_url="https://api.x.ai/v1"
+)
+
+# =========================
 # CREATE USERS TABLE
+# =========================
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,12 +36,18 @@ CREATE TABLE IF NOT EXISTS users(
 
 conn.commit()
 
-# HOME PAGE -> INDEX.HTML
+# =========================
+# HOME PAGE
+# =========================
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
+# =========================
 # REGISTER PAGE
+# =========================
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -46,7 +68,10 @@ def register():
 
     return render_template("register.html")
 
+# =========================
 # LOGIN PAGE
+# =========================
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -70,7 +95,10 @@ def login():
 
     return render_template("login.html")
 
-# DASHBOARD PAGE
+# =========================
+# DASHBOARD
+# =========================
+
 @app.route("/dashboard")
 def dashboard():
 
@@ -82,7 +110,10 @@ def dashboard():
         user=session["user"]
     )
 
+# =========================
 # QUIZ PAGE
+# =========================
+
 @app.route("/quiz")
 def quiz():
 
@@ -91,14 +122,10 @@ def quiz():
 
     return render_template("quiz.html")
 
-# LOGOUT
-@app.route("/logout")
-def logout():
-
-    session.clear()
-
-    return redirect("/login")
+# =========================
 # APTITUDE PAGE
+# =========================
+
 @app.route("/aptitude")
 def aptitude():
 
@@ -107,8 +134,47 @@ def aptitude():
 
     return render_template("aptitude.html")
 
+# =========================
+# APTITUDE AI
+# =========================
 
+@app.route("/aptitude-ai", methods=["GET", "POST"])
+def aptitude_ai():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        question = request.form["question"]
+
+        response = client.chat.completions.create(
+            model="grok-beta",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""
+                    Solve this aptitude question step-by-step:
+
+                    {question}
+                    """
+                }
+            ]
+        )
+
+        result = response.choices[0].message.content
+
+    return render_template(
+        "aptitude_ai.html",
+        result=result
+    )
+
+# =========================
 # CODING PAGE
+# =========================
+
 @app.route("/coding")
 def coding():
 
@@ -117,8 +183,50 @@ def coding():
 
     return render_template("coding.html")
 
+# =========================
+# CODING AI
+# =========================
 
+@app.route("/coding-ai", methods=["GET", "POST"])
+def coding_ai():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        question = request.form["question"]
+
+        response = client.chat.completions.create(
+            model="grok-beta",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""
+                    Solve this coding question in Python.
+
+                    Give explanation also.
+
+                    Question:
+                    {question}
+                    """
+                }
+            ]
+        )
+
+        result = response.choices[0].message.content
+
+    return render_template(
+        "coding_ai.html",
+        result=result
+    )
+
+# =========================
 # RESUME ANALYZER PAGE
+# =========================
+
 @app.route("/resume")
 def resume():
 
@@ -127,6 +235,64 @@ def resume():
 
     return render_template("resume.html")
 
+# =========================
+# RESUME AI ANALYZER
+# =========================
+
+@app.route("/resume-ai", methods=["GET", "POST"])
+def resume_ai():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        resume_text = request.form["resume_text"]
+
+        response = client.chat.completions.create(
+            model="grok-beta",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""
+                    Analyze this resume.
+
+                    Give:
+                    1. ATS Score
+                    2. Missing Skills
+                    3. Improvement Suggestions
+                    4. Placement Readiness
+
+                    Resume:
+                    {resume_text}
+                    """
+                }
+            ]
+        )
+
+        result = response.choices[0].message.content
+
+    return render_template(
+        "resume_ai.html",
+        result=result
+    )
+
+# =========================
+# LOGOUT
+# =========================
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
+
+# =========================
 # RUN APP
+# =========================
+
 if __name__ == "__main__":
     app.run(debug=True)
