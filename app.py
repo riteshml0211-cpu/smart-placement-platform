@@ -67,6 +67,32 @@ except Exception as e:
     print("❌ Table Error:", e)
 
 # =========================================
+# PERFORMANCE TABLE
+# =========================================
+
+try:
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS performance(
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(100),
+        aptitude_score INTEGER DEFAULT 0,
+        coding_score INTEGER DEFAULT 0,
+        interview_score INTEGER DEFAULT 0
+    )
+    """)
+
+    conn.commit()
+
+    print("✅ Performance Table Ready")
+
+except Exception as e:
+
+    conn.rollback()
+
+    print("❌ Performance Table Error:", e)
+
+# =========================================
 # HOME PAGE
 # =========================================
 
@@ -100,9 +126,27 @@ def register():
 
                 return "⚠️ Username already exists"
 
+            # INSERT USER
+
             cursor.execute(
                 "INSERT INTO users(name,password) VALUES(%s,%s)",
                 (name, password)
+            )
+
+            # CREATE PERFORMANCE ROW
+
+            cursor.execute(
+                """
+                INSERT INTO performance(
+                username,
+                aptitude_score,
+                coding_score,
+                interview_score
+                )
+
+                VALUES(%s,%s,%s,%s)
+                """,
+                (name, 0, 0, 0)
             )
 
             conn.commit()
@@ -171,6 +215,7 @@ def dashboard():
         "dashboard.html",
         user=session["user"]
     )
+
 # =========================================
 # PROFILE PAGE
 # =========================================
@@ -186,9 +231,7 @@ def profile():
         "profile.html",
         user=session["user"]
     )
-# =========================================
-# AI APTITUDE
-# =========================================
+
 # =========================================
 # AI APTITUDE
 # =========================================
@@ -240,7 +283,6 @@ def aptitude():
 
             data = response.choices[0].message.content
 
-            # EXTRACT ANSWER
             lines = data.splitlines()
 
             for line in lines:
@@ -256,7 +298,6 @@ def aptitude():
                         ""
                     ).strip()
 
-            # REMOVE ANSWER + EXPLANATION
             clean_question = ""
 
             for line in lines:
@@ -291,6 +332,19 @@ def aptitude():
 
         answer = "✅ Correct Answer"
 
+        # UPDATE SCORE
+
+        cursor.execute(
+            """
+            UPDATE performance
+            SET aptitude_score = aptitude_score + 10
+            WHERE username=%s
+            """,
+            (session["user"],)
+        )
+
+        conn.commit()
+
     else:
 
         answer = f"❌ Wrong Answer. Correct Answer is {correct}"
@@ -301,6 +355,7 @@ def aptitude():
         answer=answer,
         explanation=explanation
     )
+
 # =========================================
 # AI CODING PAGE
 # =========================================
@@ -394,7 +449,24 @@ def check_code():
             ]
         )
 
-        feedback = response.choices[0].message.content
+        feedback_text = response.choices[0].message.content
+
+        feedback = feedback_text
+
+        # UPDATE CODING SCORE
+
+        if "Correct" in feedback_text:
+
+            cursor.execute(
+                """
+                UPDATE performance
+                SET coding_score = coding_score + 10
+                WHERE username=%s
+                """,
+                (session["user"],)
+            )
+
+            conn.commit()
 
     except Exception as e:
 
@@ -445,6 +517,19 @@ def mock_interview():
 
             result = response.choices[0].message.content
 
+            # UPDATE INTERVIEW SCORE
+
+            cursor.execute(
+                """
+                UPDATE performance
+                SET interview_score = interview_score + 10
+                WHERE username=%s
+                """,
+                (session["user"],)
+            )
+
+            conn.commit()
+
         except Exception as e:
 
             result = f"AI Error: {str(e)}"
@@ -465,7 +550,68 @@ def skills():
 
         return redirect("/login")
 
-    return render_template("skills.html")
+    cursor.execute(
+        """
+        SELECT aptitude_score,
+               coding_score,
+               interview_score
+
+        FROM performance
+
+        WHERE username=%s
+        """,
+        (session["user"],)
+    )
+
+    data = cursor.fetchone()
+
+    aptitude = data[0]
+    coding = data[1]
+    interview = data[2]
+
+    return render_template(
+        "skills.html",
+        aptitude=aptitude,
+        coding=coding,
+        interview=interview
+    )
+
+# =========================================
+# PROGRESS ANALYTICS
+# =========================================
+
+@app.route("/analytics")
+def analytics():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    cursor.execute(
+        """
+        SELECT aptitude_score,
+               coding_score,
+               interview_score
+
+        FROM performance
+
+        WHERE username=%s
+        """,
+        (session["user"],)
+    )
+
+    data = cursor.fetchone()
+
+    aptitude = data[0]
+    coding = data[1]
+    interview = data[2]
+
+    return render_template(
+        "analytics.html",
+        aptitude=aptitude,
+        coding=coding,
+        interview=interview
+    )
 
 # =========================================
 # AI ASSISTANT
@@ -666,21 +812,7 @@ def logout():
     session.clear()
 
     return redirect("/login")
-# =========================================
-# PROGRESS ANALYTICS
-# =========================================
 
-@app.route("/analytics")
-def analytics():
-
-    if "user" not in session:
-
-        return redirect("/login")
-
-    return render_template(
-        "analytics.html",
-        user=session["user"]
-    )
 # =========================================
 # RUN APP
 # =========================================
