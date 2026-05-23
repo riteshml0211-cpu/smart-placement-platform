@@ -13,7 +13,7 @@
 
 <div class="navbar">
 
-    <h2>🤖 Resume Analyzer</h2>
+    <h2>🤖 AI Resume Analyzer</h2>
 
     <div>
         <a href="/dashboard">Dashboard</a>
@@ -24,19 +24,49 @@
 
 <div class="dashboard">
 
-    <h1>Upload Resume</h1>
+    <div class="dashboard-card">
+
+        <h1>Paste Resume Text</h1>
+
+        <form method="POST">
+
+            <textarea
+            name="resume_text"
+            rows="12"
+            style="
+            width:100%;
+            padding:15px;
+            border-radius:15px;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            border:none;
+            "
+            placeholder="Paste resume here..."
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+                Analyze Resume
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if result %}
 
     <div class="dashboard-card">
 
-        <input type="file">
+        <h2>AI Analysis Result</h2>
 
-        <br><br>
+        <br>
 
-        <button>
-            Analyze Resume
-        </button>
+        <p>{{ result }}</p>
 
     </div>
+
+    {% endif %}
 
 </div>
 
