@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Aptitude Practice</title>
+    <title>AI Aptitude Practice</title>
 
     <link rel="stylesheet"
     href="{{ url_for('static', filename='style.css') }}">
@@ -13,7 +13,7 @@
 
 <div class="navbar">
 
-    <h2>🧠 Aptitude Practice</h2>
+    <h2>🤖 AI Aptitude Practice</h2>
 
     <div>
         <a href="/dashboard">Dashboard</a>
@@ -24,41 +24,33 @@
 
 <div class="dashboard">
 
-    <h1>Aptitude Questions</h1>
+    <div class="dashboard-card">
 
-    <div class="dashboard-cards">
+        <h1>Ask Aptitude Question</h1>
 
-        <div class="dashboard-card">
+        <form method="POST" action="/aptitude-ai">
 
-            <h3>1. What is 10 + 20 ?</h3>
+            <textarea
+            name="question"
+            rows="8"
+            style="
+            width:100%;
+            padding:15px;
+            border-radius:15px;
+            border:none;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            "
+            placeholder="Enter aptitude question here..."
+            ></textarea>
 
-            <br>
-
-            <button>20</button>
             <br><br>
 
-            <button>30</button>
-            <br><br>
+            <button type="submit">
+                Solve Using AI
+            </button>
 
-            <button>40</button>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <h3>2. Find next number: 2,4,6,8 ?</h3>
-
-            <br>
-
-            <button>10</button>
-            <br><br>
-
-            <button>12</button>
-            <br><br>
-
-            <button>14</button>
-
-        </div>
+        </form>
 
     </div>
 
