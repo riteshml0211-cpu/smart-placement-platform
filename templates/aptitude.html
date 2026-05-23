@@ -26,8 +26,6 @@
 
 <div class="dashboard">
 
-    {% if result %}
-
     <div class="dashboard-card">
 
         <h2>Aptitude Question</h2>
@@ -36,19 +34,30 @@
 
         <p style="white-space:pre-line; line-height:1.8;">
 
-            {{ result }}
+            {{ question }}
 
         </p>
 
-        <hr><br>
+        {% if not answer %}
 
-        <!-- OPTIONS -->
+        <hr><br>
 
         <form method="POST">
 
-            <input type="hidden"
+            <input
+            type="hidden"
             name="correct"
-            value="A">
+            value="{{ correct_answer }}">
+
+            <input
+            type="hidden"
+            name="question"
+            value="{{ question }}">
+
+            <input
+            type="hidden"
+            name="explanation"
+            value="{{ explanation }}">
 
             <button
             type="submit"
@@ -94,9 +103,9 @@
 
         </form>
 
-    </div>
+        {% endif %}
 
-    {% endif %}
+    </div>
 
     {% if answer %}
 
@@ -113,6 +122,14 @@
             {{ answer }}
 
         </h1>
+
+        <br>
+
+        <p>
+
+            {{ explanation }}
+
+        </p>
 
         <br>
 
