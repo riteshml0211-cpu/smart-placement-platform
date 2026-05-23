@@ -1,28 +1,73 @@
-
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>PlacePilot AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
 
-<nav>
-    <a href="/">Home</a>
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-</nav>
+<div class="main-container">
 
-<div class="container">
+    <div class="left">
 
-    <h1>Smart Placement Preparation Platform</h1>
-
-    <div class="card">
-        <h2>Prepare for Placements Smarter 🚀</h2>
+        <h1>
+            Smart Placement
+            <span>Preparation</span>
+            Platform
+        </h1>
 
         <p>
-            Aptitude, Coding, AI Resume Analysis and Mock Interviews.
+            Crack placements smarter with AI-powered
+            aptitude practice, coding preparation,
+            resume analysis and interview support.
         </p>
+
+        <div class="features">
+
+            <div class="card">
+                <h3>🧠 Aptitude</h3>
+                <p>Practice placement questions.</p>
+            </div>
+
+            <div class="card">
+                <h3>💻 Coding</h3>
+                <p>Prepare coding interviews.</p>
+            </div>
+
+            <div class="card">
+                <h3>🤖 AI Resume</h3>
+                <p>Analyze your resume.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="right">
+
+        <div class="login-box">
+
+            <h2>🚀 PlacePilot AI</h2>
+
+            <p>
+                Smart Placement Preparation Platform
+            </p>
+
+            <a href="/login">
+
+                <button>
+                    Get Started
+                </button>
+
+            </a>
+
+        </div>
+
     </div>
 
 </div>
