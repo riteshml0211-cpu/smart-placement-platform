@@ -235,6 +235,8 @@ def profile():
 # =========================================
 # AI APTITUDE
 # =========================================
+# AI APTITUDE
+# =========================================
 
 @app.route("/aptitude", methods=["GET", "POST"])
 def aptitude():
@@ -248,7 +250,9 @@ def aptitude():
     explanation = ""
     correct_answer = ""
 
+    # =========================
     # GENERATE QUESTION
+    # =========================
 
     if request.method == "GET":
 
@@ -260,23 +264,22 @@ def aptitude():
                     {
                         "role": "user",
                         "content": """
-                        Generate one aptitude MCQ question.
+Generate one aptitude MCQ question.
 
-                        Format EXACTLY like this:
+Format EXACTLY like this:
 
-                        Question:
-                        ...
+Question:
+...
 
-                        A. ...
-                        B. ...
-                        C. ...
-                        D. ...
+A. ...
+B. ...
+C. ...
+D. ...
 
-                        Correct Answer: A
+Correct Answer: A
 
-                        Explanation: ...
-
-                        """
+Explanation: ...
+"""
                     }
                 ]
             )
@@ -284,6 +287,8 @@ def aptitude():
             data = response.choices[0].message.content
 
             lines = data.splitlines()
+
+            # EXTRACT ANSWER + EXPLANATION
 
             for line in lines:
 
@@ -298,12 +303,17 @@ def aptitude():
                         ""
                     ).strip()
 
+            # REMOVE ANSWER + EXPLANATION
+
             clean_question = ""
 
             for line in lines:
 
-                if "Correct Answer:" not in line and \
-                   "Explanation:" not in line:
+                if (
+                    "Correct Answer:" not in line
+                    and
+                    "Explanation:" not in line
+                ):
 
                     clean_question += line + "\n"
 
@@ -321,73 +331,83 @@ def aptitude():
                 question=f"AI Error: {str(e)}"
             )
 
+    # =========================
     # CHECK ANSWER
+    # =========================
 
-    selected = request.form["selected"]
-    correct = request.form["correct"]
-    explanation = request.form["explanation"]
-    question = request.form["question"]
+    try:
 
-    if selected == correct:
+        selected = request.form["selected"]
+        correct = request.form["correct"]
+        explanation = request.form["explanation"]
+        question = request.form["question"]
 
-        answer = "✅ Correct Answer"
+        if selected == correct:
 
-        # UPDATE SCORE
+            answer = "✅ Correct Answer"
 
-       # CHECK PERFORMANCE ROW
+            # CHECK PERFORMANCE ROW
 
-cursor.execute(
-    """
-    SELECT * FROM performance
-    WHERE username=%s
-    """,
-    (session["user"],)
-)
+            cursor.execute(
+                """
+                SELECT * FROM performance
+                WHERE username=%s
+                """,
+                (session["user"],)
+            )
 
-existing = cursor.fetchone()
+            existing = cursor.fetchone()
 
-# CREATE ROW IF NOT EXISTS
+            # CREATE ROW IF NOT EXISTS
 
-if existing is None:
+            if existing is None:
 
-    cursor.execute(
-        """
-        INSERT INTO performance(
-        username,
-        aptitude_score,
-        coding_score,
-        interview_score
+                cursor.execute(
+                    """
+                    INSERT INTO performance(
+                    username,
+                    aptitude_score,
+                    coding_score,
+                    interview_score
+                    )
+
+                    VALUES(%s,%s,%s,%s)
+                    """,
+                    (session["user"], 10, 0, 0)
+                )
+
+            else:
+
+                cursor.execute(
+                    """
+                    UPDATE performance
+                    SET aptitude_score = aptitude_score + 10
+                    WHERE username=%s
+                    """,
+                    (session["user"],)
+                )
+
+            conn.commit()
+
+        else:
+
+            answer = (
+                f"❌ Wrong Answer. "
+                f"Correct Answer is {correct}"
+            )
+
+        return render_template(
+            "aptitude.html",
+            question=question,
+            answer=answer,
+            explanation=explanation
         )
 
-        VALUES(%s,%s,%s,%s)
-        """,
-        (session["user"], 10, 0, 0)
-    )
+    except Exception as e:
 
-else:
+        conn.rollback()
 
-    cursor.execute(
-        """
-        UPDATE performance
-        SET aptitude_score = aptitude_score + 10
-        WHERE username=%s
-        """,
-        (session["user"],)
-    )
-
-conn.commit()
-
-    else:
-
-        answer = f"❌ Wrong Answer. Correct Answer is {correct}"
-
-    return render_template(
-        "aptitude.html",
-        question=question,
-        answer=answer,
-        explanation=explanation
-    )
-
+        return f"Aptitude Error: {str(e)}"
 # =========================================
 # AI CODING PAGE
 # =========================================
