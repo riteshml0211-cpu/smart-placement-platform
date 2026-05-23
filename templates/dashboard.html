@@ -2,31 +2,48 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-<nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/quiz">Quiz</a>
-    <a href="/logout">Logout</a>
-</nav>
+<div class="navbar">
 
-<div class="container">
+    <h2>🚀 PlacePilot AI</h2>
 
-<h1>Welcome {{ user }}</h1>
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
 
-<div class="card">
-    <h2>Placement Dashboard</h2>
-
-    <p>Start aptitude preparation and improve your skills.</p>
 </div>
 
-<div class="card">
-    <a href="/quiz">
-        <button>Start Quiz</button>
-    </a>
-</div>
+<div class="dashboard">
+
+    <h1>
+        Welcome {{ user }} 👋
+    </h1>
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h2>🧠 Aptitude Practice</h2>
+            <p>Practice aptitude questions.</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>💻 Coding Preparation</h2>
+            <p>Improve coding skills.</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>🤖 Resume Analyzer</h2>
+            <p>Analyze your resume using AI.</p>
+        </div>
+
+    </div>
 
 </div>
 
