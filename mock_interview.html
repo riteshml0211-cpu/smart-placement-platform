@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Skill Tracking</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>📊 Skill Tracking</h2>
+
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <h1>Your Skills</h1>
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h2>🧠 Aptitude</h2>
+            <h1>80%</h1>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>💻 Coding</h2>
+            <h1>72%</h1>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>🎤 Communication</h2>
+            <h1>90%</h1>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
