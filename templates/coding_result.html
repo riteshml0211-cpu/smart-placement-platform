@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Code Evaluation</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>🤖 AI Code Evaluation</h2>
+
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/coding">Back</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <div class="dashboard-card">
+
+        <h1>AI Feedback</h1>
+
+        <br>
+
+        <p style="white-space:pre-line; line-height:1.8;">
+
+            {{ feedback }}
+
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
