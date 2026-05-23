@@ -132,49 +132,37 @@ def aptitude():
     if "user" not in session:
         return redirect("/login")
 
-    return render_template("aptitude.html")
+    response = client.chat.completions.create(
+        model="grok-beta",
+        messages=[
+            {
+                "role": "user",
+                "content": """
+                Generate one aptitude MCQ question.
 
-# =========================
-# APTITUDE AI
-# =========================
+                Format:
+                Question:
+                Options:
+                A)
+                B)
+                C)
+                D)
 
-@app.route("/aptitude-ai", methods=["GET", "POST"])
-def aptitude_ai():
+                Correct Answer:
+                Explanation:
 
-    if "user" not in session:
-        return redirect("/login")
+                Difficulty: Medium
 
-    result = ""
+                Keep it short.
+                """
+            }
+        ]
+    )
 
-    if request.method == "POST":
-
-        question = request.form["question"]
-
-        response = client.chat.completions.create(
-            model="grok-beta",
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"""
-                    Solve this aptitude question.
-
-                    Give:
-                    1. Correct Answer
-                    2. Step-by-step explanation
-                    3. Shortcut method
-                    4. Difficulty level
-
-                    Question:
-                    {question}
-                    """
-                }
-            ]
-        )
-
-        result = response.choices[0].message.content
+    result = response.choices[0].message.content
 
     return render_template(
-        "aptitude_ai.html",
+        "aptitude.html",
         result=result
     )
 # =========================
