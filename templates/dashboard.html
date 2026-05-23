@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Dashboard</title>
 
     <link rel="stylesheet"
     href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
@@ -14,8 +16,10 @@
     <h2>🚀 PlacePilot AI</h2>
 
     <div>
+
         <a href="/dashboard">Dashboard</a>
         <a href="/logout">Logout</a>
+
     </div>
 
 </div>
@@ -28,79 +32,153 @@
 
     <div class="dashboard-cards">
 
+        <!-- Aptitude -->
+
         <div class="dashboard-card">
+
             <h2>🧠 Aptitude Practice</h2>
-            <p>Practice aptitude questions.</p>
+
+            <p>
+                Practice placement aptitude questions.
+            </p>
+
+            <br>
+
+            <a href="/aptitude">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
         </div>
 
+        <!-- Coding -->
+
         <div class="dashboard-card">
+
             <h2>💻 Coding Preparation</h2>
-            <p>Improve coding skills.</p>
+
+            <p>
+                Practice coding interview questions.
+            </p>
+
+            <br>
+
+            <a href="/coding">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
         </div>
+
+        <!-- Resume -->
 
         <div class="dashboard-card">
+
             <h2>🤖 Resume Analyzer</h2>
-            <p>Analyze your resume using AI.</p>
+
+            <p>
+                Analyze your resume using AI.
+            </p>
+
+            <br>
+
+            <a href="/resume">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
+        </div>
+
+        <!-- Mock Interview -->
+
+        <div class="dashboard-card">
+
+            <h2>🎤 Mock Interview</h2>
+
+            <p>
+                Practice HR and technical interviews.
+            </p>
+
+            <br>
+
+            <a href="/mock-interview">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
+        </div>
+
+        <!-- Skill Tracking -->
+
+        <div class="dashboard-card">
+
+            <h2>📊 Skill Tracking</h2>
+
+            <p>
+                Track aptitude, coding and communication skills.
+            </p>
+
+            <br>
+
+            <a href="/skills">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
+        </div>
+
+        <!-- AI Assistant -->
+
+        <div class="dashboard-card">
+
+            <h2>🤖 AI Assistant</h2>
+
+            <p>
+                Get AI guidance for placements and interviews.
+            </p>
+
+            <br>
+
+            <a href="/assistant">
+
+                <button>
+
+                    Open
+
+                </button>
+
+            </a>
+
         </div>
 
     </div>
 
 </div>
-<div class="dashboard-cards">
 
-    <div class="dashboard-card">
-
-        <h2>🧠 Aptitude Practice</h2>
-
-        <p>Practice placement aptitude questions.</p>
-
-        <br>
-
-        <a href="/aptitude">
-            <button>Open</button>
-        </a>
-
-    </div>
-
-    <div class="dashboard-card">
-
-        <h2>💻 Coding Preparation</h2>
-
-        <p>Practice coding interview questions.</p>
-
-        <br>
-
-        <a href="/coding">
-            <button>Open</button>
-        </a>
-
-    </div>
-
-    <div class="dashboard-card">
-
-        <h2>🤖 AI Resume Analyzer</h2>
-
-        <p>Analyze your resume using AI.</p>
-
-        <br>
-
-        <a href="/resume">
-            <button>Open</button>
-        </a>
-
-    </div>
-
-</div>
 </body>
 </html>
-<a href="/mock-interview">
-<button>Mock Interview</button>
-</a>
-
-<a href="/skills">
-<button>Skill Tracking</button>
-</a>
-
-<a href="/assistant">
-<button>AI Assistant</button>
-</a>
