@@ -50,8 +50,6 @@ except Exception as e:
 
 try:
 
-    # DELETE OLD TABLE
-    cursor.execute("DROP TABLE IF EXISTS users")
 
     # CREATE NEW TABLE
     cursor.execute("""
