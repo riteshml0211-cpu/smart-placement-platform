@@ -13,40 +13,122 @@
 
 <div class="navbar">
 
-    <h2>🤖 AI Aptitude Practice</h2>
+    <h2>🧠 AI Aptitude Practice</h2>
 
     <div>
+
         <a href="/dashboard">Dashboard</a>
         <a href="/logout">Logout</a>
+
     </div>
 
 </div>
 
 <div class="dashboard">
 
+    {% if result %}
+
     <div class="dashboard-card">
 
-        <h1>AI Generated Question</h1>
+        <h2>Aptitude Question</h2>
 
         <br>
 
-        <p style="line-height:1.8; white-space:pre-line;">
+        <p style="white-space:pre-line; line-height:1.8;">
 
             {{ result }}
 
         </p>
+
+        <hr><br>
+
+        <!-- OPTIONS -->
+
+        <form method="POST">
+
+            <input type="hidden"
+            name="correct"
+            value="A">
+
+            <button
+            type="submit"
+            name="selected"
+            value="A">
+
+                Option A
+
+            </button>
+
+            <br><br>
+
+            <button
+            type="submit"
+            name="selected"
+            value="B">
+
+                Option B
+
+            </button>
+
+            <br><br>
+
+            <button
+            type="submit"
+            name="selected"
+            value="C">
+
+                Option C
+
+            </button>
+
+            <br><br>
+
+            <button
+            type="submit"
+            name="selected"
+            value="D">
+
+                Option D
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+    {% if answer %}
+
+    <br>
+
+    <div class="dashboard-card">
+
+        <h2>Result</h2>
+
+        <br>
+
+        <h1>
+
+            {{ answer }}
+
+        </h1>
 
         <br>
 
         <a href="/aptitude">
 
             <button>
-                Generate New Question
+
+                Next Question
+
             </button>
 
         </a>
 
     </div>
+
+    {% endif %}
 
 </div>
 
