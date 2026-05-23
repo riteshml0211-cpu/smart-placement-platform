@@ -2,25 +2,58 @@
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-<div class="container">
+<div class="right" style="width:100%;height:100vh;">
 
-<h1>Register</h1>
+    <div class="login-box">
 
-<form method="POST">
+        <h2>Create Account 🚀</h2>
 
-    <input type="text" name="name" placeholder="Name" required>
+        <p>Join Smart Placement Platform</p>
 
-    <input type="email" name="email" placeholder="Email" required>
+        <form method="POST">
 
-    <input type="password" name="password" placeholder="Password" required>
+            <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            required>
 
-    <button type="submit">Register</button>
+            <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            required>
 
-</form>
+            <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+        <div class="link">
+
+            Already have account?
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 
