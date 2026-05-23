@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/quiz">Quiz</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<div class="container">
+
+<h1>Welcome {{ user }}</h1>
+
+<div class="card">
+    <h2>Placement Dashboard</h2>
+
+    <p>Start aptitude preparation and improve your skills.</p>
+</div>
+
+<div class="card">
+    <a href="/quiz">
+        <button>Start Quiz</button>
+    </a>
+</div>
+
+</div>
+
+</body>
+</html>
