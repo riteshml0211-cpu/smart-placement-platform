@@ -176,7 +176,11 @@ def dashboard():
 # AI APTITUDE
 # =========================================
 
-@app.route("/aptitude")
+# =========================================
+# AI APTITUDE
+# =========================================
+
+@app.route("/aptitude", methods=["GET", "POST"])
 def aptitude():
 
     if "user" not in session:
@@ -184,38 +188,68 @@ def aptitude():
         return redirect("/login")
 
     result = ""
+    answer = ""
 
-    try:
+    if request.method == "GET":
 
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": """
-                    Generate one aptitude MCQ question.
+        try:
 
-                    Include:
-                    1. Question
-                    2. Four options
-                    3. Correct answer
-                    4. Explanation
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": """
+                        Generate one aptitude MCQ question.
 
-                    Keep it beginner friendly.
-                    """
-                }
-            ]
+                        Format EXACTLY like this:
+
+                        Question:
+                        ...
+
+                        A.
+                        B.
+                        C.
+                        D.
+
+                        Correct Answer: A
+
+                        Explanation:
+                        ...
+
+                        Keep it beginner friendly.
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
+
+        return render_template(
+            "aptitude.html",
+            result=result
         )
 
-        result = response.choices[0].message.content
+    # CHECK ANSWER
 
-    except Exception as e:
+    selected = request.form["selected"]
+    correct = request.form["correct"]
 
-        result = f"AI Error: {str(e)}"
+    if selected == correct:
+
+        answer = "✅ Correct Answer"
+
+    else:
+
+        answer = f"❌ Wrong Answer. Correct Answer is {correct}"
 
     return render_template(
         "aptitude.html",
-        result=result
+        answer=answer
     )
 
 # =========================================
