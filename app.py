@@ -44,20 +44,27 @@ except Exception as e:
 # CREATE USERS TABLE
 # =========================================
 
+# =========================================
+# RESET USERS TABLE
+# =========================================
+
 try:
 
+    # DELETE OLD TABLE
+    cursor.execute("DROP TABLE IF EXISTS users")
+
+    # CREATE NEW TABLE
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users(
+    CREATE TABLE users(
         id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        email VARCHAR(100) UNIQUE,
+        name VARCHAR(100) UNIQUE,
         password VARCHAR(100)
     )
     """)
 
     conn.commit()
 
-    print("✅ Users Table Ready")
+    print("✅ Fresh Users Table Created")
 
 except Exception as e:
 
@@ -86,25 +93,24 @@ def register():
         try:
 
             name = request.form["name"]
-            email = request.form["email"]
             password = request.form["password"]
 
-            # CHECK EXISTING EMAIL
+            # CHECK EXISTING USER
             cursor.execute(
-                "SELECT * FROM users WHERE email=%s",
-                (email,)
+                "SELECT * FROM users WHERE name=%s",
+                (name,)
             )
 
             existing_user = cursor.fetchone()
 
             if existing_user:
 
-                return "⚠️ Email already exists"
+                return "⚠️ Username already exists"
 
             # INSERT USER
             cursor.execute(
-                "INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",
-                (name, email, password)
+                "INSERT INTO users(name,password) VALUES(%s,%s)",
+                (name, password)
             )
 
             conn.commit()
@@ -130,12 +136,12 @@ def login():
 
         try:
 
-            email = request.form["email"]
+            name = request.form["name"]
             password = request.form["password"]
 
             cursor.execute(
-                "SELECT * FROM users WHERE email=%s AND password=%s",
-                (email, password)
+                "SELECT * FROM users WHERE name=%s AND password=%s",
+                (name, password)
             )
 
             user = cursor.fetchone()
@@ -148,7 +154,7 @@ def login():
 
             else:
 
-                return "❌ Invalid Email or Password"
+                return "❌ Invalid Username or Password"
 
         except Exception as e:
 
