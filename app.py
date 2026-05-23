@@ -490,7 +490,64 @@ def resume_ai():
         "resume_ai.html",
         result=result
     )
+# =========================================
+# AI RESUME BUILDER
+# =========================================
 
+@app.route("/resume-builder", methods=["GET", "POST"])
+def resume_builder():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        skills = request.form["skills"]
+        education = request.form["education"]
+        projects = request.form["projects"]
+
+        try:
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+                        Create a professional resume.
+
+                        Name:
+                        {name}
+
+                        Skills:
+                        {skills}
+
+                        Education:
+                        {education}
+
+                        Projects:
+                        {projects}
+
+                        Format it professionally.
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
+
+    return render_template(
+        "resume_builder.html",
+        result=result
+    )
 # =========================================
 # LOGOUT
 # =========================================
