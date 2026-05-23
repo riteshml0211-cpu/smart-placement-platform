@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from openai import OpenAI
 
+import os
 app = Flask(__name__)
 app.secret_key = "secret123"
 
@@ -16,8 +17,9 @@ cursor = conn.cursor()
 # GROK AI CLIENT
 # =========================
 
+
 client = OpenAI(
-    api_key="YOUR_GROK_API_KEY",
+    api_key=os.getenv("GROK_API_KEY"),
     base_url="https://api.x.ai/v1"
 )
 
