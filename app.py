@@ -10,34 +10,60 @@ app.secret_key = "secret123"
 # NEON DATABASE CONNECTION
 # =========================================
 
-conn = psycopg2.connect(
-    os.getenv("DATABASE_URL")
-)
+try:
 
-cursor = conn.cursor()
+    conn = psycopg2.connect(
+        os.getenv("DATABASE_URL")
+    )
+
+    cursor = conn.cursor()
+
+    print("✅ Database Connected")
+
+except Exception as e:
+
+    print("❌ Database Error:", e)
 
 # =========================================
 # GROK AI CLIENT
 # =========================================
 
-client = OpenAI(
-    base_url="https://api.x.ai/v1"
-)
+try:
+
+    client = OpenAI(
+        base_url="https://api.x.ai/v1"
+    )
+
+    print("✅ Grok AI Connected")
+
+except Exception as e:
+
+    print("❌ AI Error:", e)
 
 # =========================================
 # CREATE USERS TABLE
 # =========================================
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100),
-    password VARCHAR(100)
-)
-""")
+try:
 
-conn.commit()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(100) UNIQUE,
+        password VARCHAR(100)
+    )
+    """)
+
+    conn.commit()
+
+    print("✅ Users Table Ready")
+
+except Exception as e:
+
+    conn.rollback()
+
+    print("❌ Table Error:", e)
 
 # =========================================
 # HOME PAGE
@@ -62,6 +88,19 @@ def register():
             email = request.form["email"]
             password = request.form["password"]
 
+            # CHECK EXISTING USER
+            cursor.execute(
+                "SELECT * FROM users WHERE email=%s",
+                (email,)
+            )
+
+            existing_user = cursor.fetchone()
+
+            if existing_user:
+
+                return "⚠️ Email already exists"
+
+            # INSERT NEW USER
             cursor.execute(
                 "INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",
                 (name, email, password)
@@ -72,6 +111,8 @@ def register():
             return redirect("/login")
 
         except Exception as e:
+
+            conn.rollback()
 
             return f"Register Error: {str(e)}"
 
@@ -106,9 +147,11 @@ def login():
 
             else:
 
-                return "Invalid Email or Password"
+                return "❌ Invalid Email or Password"
 
         except Exception as e:
+
+            conn.rollback()
 
             return f"Login Error: {str(e)}"
 
@@ -122,6 +165,7 @@ def login():
 def dashboard():
 
     if "user" not in session:
+
         return redirect("/login")
 
     return render_template(
@@ -137,6 +181,7 @@ def dashboard():
 def quiz():
 
     if "user" not in session:
+
         return redirect("/login")
 
     return render_template("quiz.html")
@@ -149,6 +194,7 @@ def quiz():
 def aptitude():
 
     if "user" not in session:
+
         return redirect("/login")
 
     try:
@@ -192,6 +238,7 @@ def aptitude():
 def coding():
 
     if "user" not in session:
+
         return redirect("/login")
 
     try:
@@ -235,6 +282,7 @@ def coding():
 def check_code():
 
     if "user" not in session:
+
         return redirect("/login")
 
     try:
@@ -282,6 +330,7 @@ def check_code():
 def resume():
 
     if "user" not in session:
+
         return redirect("/login")
 
     return render_template("resume.html")
@@ -294,6 +343,7 @@ def resume():
 def resume_ai():
 
     if "user" not in session:
+
         return redirect("/login")
 
     result = ""
@@ -352,4 +402,5 @@ def logout():
 # =========================================
 
 if __name__ == "__main__":
+
     app.run(debug=True)
