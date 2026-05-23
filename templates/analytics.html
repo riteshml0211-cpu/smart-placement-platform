@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Progress Analytics</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>📈 Progress Analytics</h2>
+
+    <div>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <h1>
+
+        {{ user }}'s Progress
+
+    </h1>
+
+    <br>
+
+    <div class="dashboard-cards">
+
+        <!-- Aptitude -->
+
+        <div class="dashboard-card">
+
+            <h2>🧠 Aptitude</h2>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                style="width:80%;">
+
+                    80%
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Coding -->
+
+        <div class="dashboard-card">
+
+            <h2>💻 Coding</h2>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                style="width:70%;">
+
+                    70%
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Interview -->
+
+        <div class="dashboard-card">
+
+            <h2>🎤 Interviews</h2>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                style="width:85%;">
+
+                    85%
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Resume -->
+
+        <div class="dashboard-card">
+
+            <h2>📄 Resume</h2>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                style="width:90%;">
+
+                    90%
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
