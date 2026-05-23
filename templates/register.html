@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Register</title>
 
     <link rel="stylesheet"
     href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
@@ -22,13 +24,7 @@
             <input
             type="text"
             name="name"
-            placeholder="Enter Name"
-            required>
-
-            <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
+            placeholder="Enter Username"
             required>
 
             <input
@@ -38,7 +34,9 @@
             required>
 
             <button type="submit">
+
                 Register
+
             </button>
 
         </form>
@@ -48,7 +46,9 @@
             Already have account?
 
             <a href="/login">
+
                 Login
+
             </a>
 
         </div>
