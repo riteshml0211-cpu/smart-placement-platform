@@ -666,7 +666,21 @@ def logout():
     session.clear()
 
     return redirect("/login")
+# =========================================
+# PROGRESS ANALYTICS
+# =========================================
 
+@app.route("/analytics")
+def analytics():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    return render_template(
+        "analytics.html",
+        user=session["user"]
+    )
 # =========================================
 # RUN APP
 # =========================================
