@@ -171,11 +171,24 @@ def dashboard():
         "dashboard.html",
         user=session["user"]
     )
+# =========================================
+# PROFILE PAGE
+# =========================================
 
+@app.route("/profile")
+def profile():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    return render_template(
+        "profile.html",
+        user=session["user"]
+    )
 # =========================================
 # AI APTITUDE
 # =========================================
-
 # =========================================
 # AI APTITUDE
 # =========================================
@@ -187,8 +200,12 @@ def aptitude():
 
         return redirect("/login")
 
-    result = ""
+    question = ""
     answer = ""
+    explanation = ""
+    correct_answer = ""
+
+    # GENERATE QUESTION
 
     if request.method == "GET":
 
@@ -207,37 +224,68 @@ def aptitude():
                         Question:
                         ...
 
-                        A.
-                        B.
-                        C.
-                        D.
+                        A. ...
+                        B. ...
+                        C. ...
+                        D. ...
 
                         Correct Answer: A
 
-                        Explanation:
-                        ...
+                        Explanation: ...
 
-                        Keep it beginner friendly.
                         """
                     }
                 ]
             )
 
-            result = response.choices[0].message.content
+            data = response.choices[0].message.content
+
+            # EXTRACT ANSWER
+            lines = data.splitlines()
+
+            for line in lines:
+
+                if "Correct Answer:" in line:
+
+                    correct_answer = line.split(":")[1].strip()
+
+                if "Explanation:" in line:
+
+                    explanation = line.replace(
+                        "Explanation:",
+                        ""
+                    ).strip()
+
+            # REMOVE ANSWER + EXPLANATION
+            clean_question = ""
+
+            for line in lines:
+
+                if "Correct Answer:" not in line and \
+                   "Explanation:" not in line:
+
+                    clean_question += line + "\n"
+
+            return render_template(
+                "aptitude.html",
+                question=clean_question,
+                correct_answer=correct_answer,
+                explanation=explanation
+            )
 
         except Exception as e:
 
-            result = f"AI Error: {str(e)}"
-
-        return render_template(
-            "aptitude.html",
-            result=result
-        )
+            return render_template(
+                "aptitude.html",
+                question=f"AI Error: {str(e)}"
+            )
 
     # CHECK ANSWER
 
     selected = request.form["selected"]
     correct = request.form["correct"]
+    explanation = request.form["explanation"]
+    question = request.form["question"]
 
     if selected == correct:
 
@@ -249,9 +297,10 @@ def aptitude():
 
     return render_template(
         "aptitude.html",
-        answer=answer
+        question=question,
+        answer=answer,
+        explanation=explanation
     )
-
 # =========================================
 # AI CODING PAGE
 # =========================================
