@@ -46,14 +46,20 @@ except Exception as e:
 
 try:
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users(
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100),
-        email VARCHAR(100) UNIQUE,
-        password VARCHAR(100)
-    )
-    """)
+   # DELETE OLD TABLE
+cursor.execute("DROP TABLE IF EXISTS users")
+
+# CREATE NEW TABLE
+cursor.execute("""
+CREATE TABLE users(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100)
+)
+""")
+
+conn.commit()
 
     conn.commit()
 
