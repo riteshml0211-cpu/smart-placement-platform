@@ -156,8 +156,15 @@ def aptitude_ai():
                 {
                     "role": "user",
                     "content": f"""
-                    Solve this aptitude question step-by-step:
+                    Solve this aptitude question.
 
+                    Give:
+                    1. Correct Answer
+                    2. Step-by-step explanation
+                    3. Shortcut method
+                    4. Difficulty level
+
+                    Question:
                     {question}
                     """
                 }
@@ -170,7 +177,6 @@ def aptitude_ai():
         "aptitude_ai.html",
         result=result
     )
-
 # =========================
 # CODING PAGE
 # =========================
