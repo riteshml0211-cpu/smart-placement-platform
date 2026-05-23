@@ -1,34 +1,93 @@
-<form method="POST" action="/check-code">
+<!DOCTYPE html>
+<html>
+<head>
 
-    <!-- Hidden Question -->
+    <title>AI Coding Practice</title>
 
-    <textarea
-    name="question"
-    hidden>{{ result }}</textarea>
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
 
-    <!-- User Code -->
+</head>
 
-    <textarea
-    name="code"
-    rows="15"
-    style="
-    width:100%;
-    background:#0f172a;
-    color:#22c55e;
-    padding:20px;
-    border:none;
-    border-radius:15px;
-    font-size:16px;
-    "
-    placeholder="Write Python code here..."
-    ></textarea>
+<body>
 
-    <br><br>
+<div class="navbar">
 
-    <button type="submit">
+    <h2>💻 AI Coding Practice</h2>
 
-        Submit Code
+    <div>
 
-    </button>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
 
-</form>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <!-- QUESTION -->
+
+    <div class="dashboard-card">
+
+        <h2>Coding Question</h2>
+
+        <br>
+
+        <p style="white-space:pre-line; line-height:1.8;">
+
+            {{ question }}
+
+        </p>
+
+    </div>
+
+    <br>
+
+    <!-- CODE SUBMISSION -->
+
+    <div class="dashboard-card">
+
+        <h2>Write Your Code</h2>
+
+        <form method="POST" action="/check-code">
+
+            <!-- Hidden Question -->
+
+            <textarea
+            name="question"
+            hidden>{{ question }}</textarea>
+
+            <!-- CODE BOX -->
+
+            <textarea
+            name="code"
+            rows="15"
+            style="
+            width:100%;
+            background:#0f172a;
+            color:#22c55e;
+            padding:20px;
+            border:none;
+            border-radius:15px;
+            font-size:16px;
+            "
+            placeholder="Write Python code here..."
+            required></textarea>
+
+            <br><br>
+
+            <button type="submit">
+
+                Submit Code
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
