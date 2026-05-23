@@ -266,7 +266,6 @@ def coding():
 # =========================================
 # AI CODE CHECKER
 # =========================================
-
 @app.route("/check-code", methods=["POST"])
 def check_code():
 
@@ -278,6 +277,7 @@ def check_code():
 
     try:
 
+        question = request.form["question"]
         code = request.form["code"]
 
         response = client.chat.completions.create(
@@ -286,17 +286,22 @@ def check_code():
                 {
                     "role": "user",
                     "content": f"""
-                    Check this Python code.
+                    Evaluate this coding answer carefully.
 
-                    Give:
-                    1. Is code correct?
+                    QUESTION:
+                    {question}
+
+                    USER CODE:
+                    {code}
+
+                    Check:
+                    1. Is the answer correct for THIS question?
                     2. Errors
-                    3. Improvements
-                    4. Optimized approach
+                    3. Missing logic
+                    4. Better approach
                     5. Score out of 10
 
-                    Code:
-                    {code}
+                    Be strict while evaluating.
                     """
                 }
             ]
