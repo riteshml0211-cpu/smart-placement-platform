@@ -207,7 +207,7 @@ def aptitude():
     try:
 
         response = client.chat.completions.create(
-            model="grok-2-latest",
+            model="grok-3-mini-beta"",
             messages=[
                 {
                     "role": "user",
@@ -253,7 +253,7 @@ def coding():
     try:
 
         response = client.chat.completions.create(
-            model="grok-2-latest",
+            model="grok-3-mini-beta",
             messages=[
                 {
                     "role": "user",
@@ -301,7 +301,7 @@ def check_code():
         code = request.form["code"]
 
         response = client.chat.completions.create(
-            model="grok-2-latest",
+            model="grok-3-mini-beta",
             messages=[
                 {
                     "role": "user",
@@ -366,7 +366,7 @@ def resume_ai():
             resume_text = request.form["resume_text"]
 
             response = client.chat.completions.create(
-                model="grok-2-latest",
+                model="grok-3-mini-beta",
                 messages=[
                     {
                         "role": "user",
