@@ -221,6 +221,10 @@ def aptitude():
 # AI CODING
 # =========================================
 
+# =========================================
+# AI CODING PAGE
+# =========================================
+
 @app.route("/coding")
 def coding():
 
@@ -228,7 +232,7 @@ def coding():
 
         return redirect("/login")
 
-    result = ""
+    question = ""
 
     try:
 
@@ -238,34 +242,37 @@ def coding():
                 {
                     "role": "user",
                     "content": """
-                    Generate one Python coding interview question.
+                    Generate ONE beginner Python coding question.
 
-                    Include:
+                    Include ONLY:
                     1. Problem Statement
                     2. Example Input
                     3. Example Output
-                    4. Difficulty Level
 
-                    Keep it beginner friendly.
+                    Do NOT provide answer.
                     """
                 }
             ]
         )
 
-        result = response.choices[0].message.content
+        question = response.choices[0].message.content
 
     except Exception as e:
 
-        result = f"AI Error: {str(e)}"
+        question = f"AI Error: {str(e)}"
 
     return render_template(
         "coding.html",
-        result=result
+        question=question
     )
 
 # =========================================
 # AI CODE CHECKER
 # =========================================
+# =========================================
+# AI CODE CHECKER
+# =========================================
+
 @app.route("/check-code", methods=["POST"])
 def check_code():
 
@@ -286,7 +293,7 @@ def check_code():
                 {
                     "role": "user",
                     "content": f"""
-                    Evaluate this coding answer carefully.
+                    You are a strict coding interviewer.
 
                     QUESTION:
                     {question}
@@ -294,14 +301,17 @@ def check_code():
                     USER CODE:
                     {code}
 
-                    Check:
-                    1. Is the answer correct for THIS question?
-                    2. Errors
-                    3. Missing logic
-                    4. Better approach
+                    Evaluate carefully.
+
+                    Return:
+                    1. Correct or Wrong
+                    2. Logic mistakes
+                    3. Syntax errors
+                    4. Improvements
                     5. Score out of 10
 
-                    Be strict while evaluating.
+                    If code does NOT solve the question,
+                    clearly say WRONG ANSWER.
                     """
                 }
             ]
@@ -317,7 +327,6 @@ def check_code():
         "coding_result.html",
         feedback=feedback
     )
-
 # =========================================
 # MOCK INTERVIEW
 # =========================================
@@ -498,9 +507,14 @@ def resume_ai():
 # =========================================
 # AI RESUME BUILDER
 # =========================================
+from PyPDF2 import PdfReader
 
-@app.route("/resume-builder", methods=["GET", "POST"])
-def resume_builder():
+# =========================================
+# AI RESUME ANALYZER
+# =========================================
+
+@app.route("/resume-ai", methods=["GET", "POST"])
+def resume_ai():
 
     if "user" not in session:
 
@@ -510,34 +524,38 @@ def resume_builder():
 
     if request.method == "POST":
 
-        name = request.form["name"]
-        skills = request.form["skills"]
-        education = request.form["education"]
-        projects = request.form["projects"]
-
         try:
 
+            pdf_file = request.files["resume"]
+
+            # READ PDF
+            reader = PdfReader(pdf_file)
+
+            resume_text = ""
+
+            for page in reader.pages:
+
+                resume_text += page.extract_text()
+
+            # AI ANALYSIS
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
                     {
                         "role": "user",
                         "content": f"""
-                        Create a professional resume.
+                        Analyze this resume.
 
-                        Name:
-                        {name}
+                        Give:
+                        1. ATS Score
+                        2. Missing Skills
+                        3. Suggestions
+                        4. Placement Readiness
+                        5. Strengths
+                        6. Weaknesses
 
-                        Skills:
-                        {skills}
-
-                        Education:
-                        {education}
-
-                        Projects:
-                        {projects}
-
-                        Format it professionally.
+                        Resume:
+                        {resume_text}
                         """
                     }
                 ]
@@ -550,7 +568,7 @@ def resume_builder():
             result = f"AI Error: {str(e)}"
 
     return render_template(
-        "resume_builder.html",
+        "resume_ai.html",
         result=result
     )
 # =========================================
