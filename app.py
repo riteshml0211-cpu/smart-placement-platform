@@ -334,16 +334,48 @@ def aptitude():
 
         # UPDATE SCORE
 
-        cursor.execute(
-            """
-            UPDATE performance
-            SET aptitude_score = aptitude_score + 10
-            WHERE username=%s
-            """,
-            (session["user"],)
+       # CHECK PERFORMANCE ROW
+
+cursor.execute(
+    """
+    SELECT * FROM performance
+    WHERE username=%s
+    """,
+    (session["user"],)
+)
+
+existing = cursor.fetchone()
+
+# CREATE ROW IF NOT EXISTS
+
+if existing is None:
+
+    cursor.execute(
+        """
+        INSERT INTO performance(
+        username,
+        aptitude_score,
+        coding_score,
+        interview_score
         )
 
-        conn.commit()
+        VALUES(%s,%s,%s,%s)
+        """,
+        (session["user"], 10, 0, 0)
+    )
+
+else:
+
+    cursor.execute(
+        """
+        UPDATE performance
+        SET aptitude_score = aptitude_score + 10
+        WHERE username=%s
+        """,
+        (session["user"],)
+    )
+
+conn.commit()
 
     else:
 
