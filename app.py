@@ -542,6 +542,9 @@ def mock_interview():
 # =========================================
 # SKILL TRACKER
 # =========================================
+# =========================================
+# SKILL TRACKER
+# =========================================
 
 @app.route("/skills")
 def skills():
@@ -565,9 +568,35 @@ def skills():
 
     data = cursor.fetchone()
 
-    aptitude = data[0]
-    coding = data[1]
-    interview = data[2]
+    # IF USER NOT FOUND
+
+    if data is None:
+
+        cursor.execute(
+            """
+            INSERT INTO performance(
+            username,
+            aptitude_score,
+            coding_score,
+            interview_score
+            )
+
+            VALUES(%s,%s,%s,%s)
+            """,
+            (session["user"], 0, 0, 0)
+        )
+
+        conn.commit()
+
+        aptitude = 0
+        coding = 0
+        interview = 0
+
+    else:
+
+        aptitude = data[0]
+        coding = data[1]
+        interview = data[2]
 
     return render_template(
         "skills.html",
@@ -602,9 +631,35 @@ def analytics():
 
     data = cursor.fetchone()
 
-    aptitude = data[0]
-    coding = data[1]
-    interview = data[2]
+    # IF USER NOT FOUND
+
+    if data is None:
+
+        cursor.execute(
+            """
+            INSERT INTO performance(
+            username,
+            aptitude_score,
+            coding_score,
+            interview_score
+            )
+
+            VALUES(%s,%s,%s,%s)
+            """,
+            (session["user"], 0, 0, 0)
+        )
+
+        conn.commit()
+
+        aptitude = 0
+        coding = 0
+        interview = 0
+
+    else:
+
+        aptitude = data[0]
+        coding = data[1]
+        interview = data[2]
 
     return render_template(
         "analytics.html",
@@ -612,7 +667,6 @@ def analytics():
         coding=coding,
         interview=interview
     )
-
 # =========================================
 # AI ASSISTANT
 # =========================================
