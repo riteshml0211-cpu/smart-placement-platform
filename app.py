@@ -44,16 +44,10 @@ except Exception as e:
 # CREATE USERS TABLE
 # =========================================
 
-# =========================================
-# RESET USERS TABLE
-# =========================================
-
 try:
 
-
-    # CREATE NEW TABLE
     cursor.execute("""
-    CREATE TABLE users(
+    CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
         name VARCHAR(100) UNIQUE,
         password VARCHAR(100)
@@ -62,7 +56,7 @@ try:
 
     conn.commit()
 
-    print("✅ Fresh Users Table Created")
+    print("✅ Users Table Ready")
 
 except Exception as e:
 
@@ -207,7 +201,7 @@ def aptitude():
     try:
 
         response = client.chat.completions.create(
-            model="grok-3-mini-beta"",
+            model="grok-3-mini-beta",
             messages=[
                 {
                     "role": "user",
