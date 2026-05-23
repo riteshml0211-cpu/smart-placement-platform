@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Coding Practice</title>
+    <title>AI Coding Preparation</title>
 
     <link rel="stylesheet"
     href="{{ url_for('static', filename='style.css') }}">
@@ -13,7 +13,7 @@
 
 <div class="navbar">
 
-    <h2>💻 Coding Preparation</h2>
+    <h2>💻 AI Coding Practice</h2>
 
     <div>
         <a href="/dashboard">Dashboard</a>
@@ -24,29 +24,52 @@
 
 <div class="dashboard">
 
-    <h1>Coding Questions</h1>
+    <div class="dashboard-card">
 
-    <div class="dashboard-cards">
+        <h1>AI Generated Coding Question</h1>
 
-        <div class="dashboard-card">
+        <br>
 
-            <h3>Python Program to Reverse String</h3>
+        <p style="white-space:pre-line; line-height:1.8;">
 
-            <p>
-                Write a program to reverse a string.
-            </p>
+            {{ result }}
 
-        </div>
+        </p>
 
-        <div class="dashboard-card">
+    </div>
 
-            <h3>Find Largest Number</h3>
+    <br>
 
-            <p>
-                Write a program to find largest number in list.
-            </p>
+    <div class="dashboard-card">
 
-        </div>
+        <h2>Write Your Code</h2>
+
+        <form method="POST" action="/check-code">
+
+            <textarea
+            name="code"
+            rows="15"
+            style="
+            width:100%;
+            background:#0f172a;
+            color:#22c55e;
+            padding:20px;
+            border:none;
+            border-radius:15px;
+            font-size:16px;
+            "
+            placeholder="Write Python code here..."
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+
+                Submit Code
+
+            </button>
+
+        </form>
 
     </div>
 
