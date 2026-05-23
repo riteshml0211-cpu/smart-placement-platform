@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 from openai import OpenAI
 import psycopg2
 import os
+from PyPDF2 import PdfReader
 
 app = Flask(__name__)
 app.secret_key = "secret123"
@@ -218,10 +219,6 @@ def aptitude():
     )
 
 # =========================================
-# AI CODING
-# =========================================
-
-# =========================================
 # AI CODING PAGE
 # =========================================
 
@@ -266,9 +263,6 @@ def coding():
         question=question
     )
 
-# =========================================
-# AI CODE CHECKER
-# =========================================
 # =========================================
 # AI CODE CHECKER
 # =========================================
@@ -327,6 +321,7 @@ def check_code():
         "coding_result.html",
         feedback=feedback
     )
+
 # =========================================
 # MOCK INTERVIEW
 # =========================================
@@ -471,73 +466,20 @@ def resume_ai():
 
         try:
 
-            resume_text = request.form["resume_text"]
-
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"""
-                        Analyze this resume.
-
-                        Give:
-                        1. ATS Score
-                        2. Missing Skills
-                        3. Suggestions
-                        4. Placement Readiness
-
-                        Resume:
-                        {resume_text}
-                        """
-                    }
-                ]
-            )
-
-            result = response.choices[0].message.content
-
-        except Exception as e:
-
-            result = f"AI Error: {str(e)}"
-
-    return render_template(
-        "resume_ai.html",
-        result=result
-    )
-# =========================================
-# AI RESUME BUILDER
-# =========================================
-from PyPDF2 import PdfReader
-
-# =========================================
-# AI RESUME ANALYZER
-# =========================================
-
-@app.route("/resume-ai", methods=["GET", "POST"])
-def resume_ai():
-
-    if "user" not in session:
-
-        return redirect("/login")
-
-    result = ""
-
-    if request.method == "POST":
-
-        try:
-
             pdf_file = request.files["resume"]
 
-            # READ PDF
             reader = PdfReader(pdf_file)
 
             resume_text = ""
 
             for page in reader.pages:
 
-                resume_text += page.extract_text()
+                text = page.extract_text()
 
-            # AI ANALYSIS
+                if text:
+
+                    resume_text += text
+
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
@@ -571,6 +513,66 @@ def resume_ai():
         "resume_ai.html",
         result=result
     )
+
+# =========================================
+# AI RESUME BUILDER
+# =========================================
+
+@app.route("/resume-builder", methods=["GET", "POST"])
+def resume_builder():
+
+    if "user" not in session:
+
+        return redirect("/login")
+
+    result = ""
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        skills = request.form["skills"]
+        education = request.form["education"]
+        projects = request.form["projects"]
+
+        try:
+
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""
+                        Create a professional resume.
+
+                        Name:
+                        {name}
+
+                        Skills:
+                        {skills}
+
+                        Education:
+                        {education}
+
+                        Projects:
+                        {projects}
+
+                        Format it professionally.
+                        """
+                    }
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        except Exception as e:
+
+            result = f"AI Error: {str(e)}"
+
+    return render_template(
+        "resume_builder.html",
+        result=result
+    )
+
 # =========================================
 # LOGOUT
 # =========================================
