@@ -31,7 +31,7 @@ except Exception as e:
 try:
 
     client = OpenAI(
-        base_url="https://api.x.ai/v1"
+         base_url="https://api.groq.com/openai/v1"
     )
 
     print("✅ Grok AI Connected")
@@ -247,7 +247,7 @@ def coding():
     try:
 
         response = client.chat.completions.create(
-            model="grok-3-mini-beta",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "user",
@@ -295,7 +295,7 @@ def check_code():
         code = request.form["code"]
 
         response = client.chat.completions.create(
-            model="grok-3-mini-beta",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "user",
@@ -360,7 +360,7 @@ def resume_ai():
             resume_text = request.form["resume_text"]
 
             response = client.chat.completions.create(
-                model="grok-3-mini-beta",
+                model="llama-3.3-70b-versatile",
                 messages=[
                     {
                         "role": "user",
