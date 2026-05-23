@@ -175,7 +175,32 @@ def coding():
     if "user" not in session:
         return redirect("/login")
 
-    return render_template("coding.html")
+    response = client.chat.completions.create(
+        model="grok-beta",
+        messages=[
+            {
+                "role": "user",
+                "content": """
+                Generate one coding interview question.
+
+                Include:
+                1. Problem Statement
+                2. Example Input
+                3. Example Output
+                4. Difficulty Level
+
+                Keep it beginner friendly.
+                """
+            }
+        ]
+    )
+
+    result = response.choices[0].message.content
+
+    return render_template(
+        "coding.html",
+        result=result
+    )
 
 # =========================
 # CODING AI
@@ -217,6 +242,42 @@ def coding_ai():
         result=result
     )
 
+@app.route("/check-code", methods=["POST"])
+def check_code():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    code = request.form["code"]
+
+    response = client.chat.completions.create(
+        model="grok-beta",
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+                Check this Python code.
+
+                Give:
+                1. Is code correct?
+                2. Errors
+                3. Improvements
+                4. Optimized approach
+                5. Score out of 10
+
+                Code:
+                {code}
+                """
+            }
+        ]
+    )
+
+    feedback = response.choices[0].message.content
+
+    return render_template(
+        "coding_result.html",
+        feedback=feedback
+    )
 # =========================
 # RESUME ANALYZER PAGE
 # =========================
