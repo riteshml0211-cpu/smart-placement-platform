@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>AI Aptitude Result</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>🧠 AI Aptitude Solver</h2>
+
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/aptitude">Back</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <div class="dashboard-card">
+
+        <h1>AI Solution</h1>
+
+        <br>
+
+        <p style="line-height:1.8;">
+            {{ result }}
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
