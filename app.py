@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "secret123"
 
 # =========================================
-# NEON DATABASE CONNECTION
+# DATABASE CONNECTION (NEON)
 # =========================================
 
 try:
@@ -46,20 +46,14 @@ except Exception as e:
 
 try:
 
-   # DELETE OLD TABLE
-cursor.execute("DROP TABLE IF EXISTS users")
-
-# CREATE NEW TABLE
-cursor.execute("""
-CREATE TABLE users(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100)
-)
-""")
-
-conn.commit()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(100) UNIQUE,
+        password VARCHAR(100)
+    )
+    """)
 
     conn.commit()
 
@@ -77,6 +71,7 @@ except Exception as e:
 
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 # =========================================
@@ -94,7 +89,7 @@ def register():
             email = request.form["email"]
             password = request.form["password"]
 
-            # CHECK EXISTING USER
+            # CHECK EXISTING EMAIL
             cursor.execute(
                 "SELECT * FROM users WHERE email=%s",
                 (email,)
@@ -106,7 +101,7 @@ def register():
 
                 return "⚠️ Email already exists"
 
-            # INSERT NEW USER
+            # INSERT USER
             cursor.execute(
                 "INSERT INTO users(name,email,password) VALUES(%s,%s,%s)",
                 (name, email, password)
@@ -203,10 +198,12 @@ def aptitude():
 
         return redirect("/login")
 
+    result = ""
+
     try:
 
         response = client.chat.completions.create(
-            model="grok-2-1212",
+            model="grok-2-latest",
             messages=[
                 {
                     "role": "user",
@@ -247,10 +244,12 @@ def coding():
 
         return redirect("/login")
 
+    result = ""
+
     try:
 
         response = client.chat.completions.create(
-            model="grok-2-1212",
+            model="grok-2-latest",
             messages=[
                 {
                     "role": "user",
@@ -291,12 +290,14 @@ def check_code():
 
         return redirect("/login")
 
+    feedback = ""
+
     try:
 
         code = request.form["code"]
 
         response = client.chat.completions.create(
-            model="grok-2-1212",
+            model="grok-2-latest",
             messages=[
                 {
                     "role": "user",
@@ -361,7 +362,7 @@ def resume_ai():
             resume_text = request.form["resume_text"]
 
             response = client.chat.completions.create(
-                model="grok-2-1212",
+                model="grok-2-latest",
                 messages=[
                     {
                         "role": "user",
