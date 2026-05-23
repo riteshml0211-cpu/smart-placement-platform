@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Resume Analyzer</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>🤖 Resume Analyzer</h2>
+
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="dashboard">
+
+    <h1>Upload Resume</h1>
+
+    <div class="dashboard-card">
+
+        <input type="file">
+
+        <br><br>
+
+        <button>
+            Analyze Resume
+        </button>
+
+    </div>
+
+</div>
+
+</body>
+</html>
